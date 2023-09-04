@@ -1,29 +1,57 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Register from './Register';
+import Login from './Login';
 
-const Form = styled.form`
+const FormContainer = styled.div`
+  position: relative;
+  background: rgba(62, 61, 61, 0.1);
+  border: 1px solid #525252;
+  border-radius: 15px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 2rem auto;
+
+  min-height: 350px;
+  backdrop-filter: blur(.8px);
+  transition: opacity 0.2s;
+
+`;
+
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  width: 100%;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   padding: 0.5rem;
-  border: none;
-  background-color: #FEF5EF;
-  color: #010101;
+  border: 2px solid #B0B0B0;
+  background-color: rgba(176, 176, 176, 0.1);
+  color: #E0E0E0;
+  border-radius: 5px;
+  transition: all 0.3s;
+
+  &:focus {
+    background-color: rgba(176, 176, 176, 0.2);
+    box-shadow: 0 0 10px rgba(176, 176, 176, 0.3);
+  }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   padding: 0.5rem 1rem;
-  border: none;
-  background-color: #44231A;
-  color: #FEF5EF;
+  border: 2px solid #C0C0C0;
+  background-color: transparent;
+  color: #E0E0E0;
+  border-radius: 5px;
+  transition: all 0.3s;
   cursor: pointer;
 
   &:hover {
-    background-color: #6B402D;
+    background-color: #C0C0C0;
+    color: #000;
   }
 `;
 
@@ -32,30 +60,17 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    onSubmit(email, password);
-  };
+  const [isRegistering, setIsRegistering] = useState(false);
+  const handleToggle = () => setIsRegistering(!isRegistering);
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-      <Input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-      <Button type="submit">Login</Button>
-    </Form>
+    <FormContainer style={{ opacity: isRegistering ? 0.7 : 1 }}>
+      {isRegistering
+        ? <Register onToggle={handleToggle} onSubmit={(email, password, username) => {/* handle registration logic */}} />
+        : <Login onToggle={handleToggle} onSubmit={onSubmit} />
+      }
+    </FormContainer>
   );
 };
 
