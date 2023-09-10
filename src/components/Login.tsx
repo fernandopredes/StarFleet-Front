@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Form, Input } from './LoginForm';
+import logo from '../assets/logo.png'
 
 interface LoginProps {
   onToggle: () => void;
@@ -18,6 +19,7 @@ const Login = ({ onToggle, onSubmit }:LoginProps) => {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
+        <img src={logo} alt="logo" />
         <Input
           type="email"
           placeholder="Email"

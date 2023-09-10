@@ -24,6 +24,9 @@ export const Form = styled.form`
   align-items: center;
   gap: 1rem;
   width: 100%;
+  img{
+    max-width: 50%;
+  }
 `;
 
 export const Input = styled.input`

@@ -42,7 +42,7 @@ const LoginContainer = styled(animated.div)`
   width: 50vw;
   height: 100vh;
   position: absolute;
-  right: 0;
+  right: 5%;
   top: 0;
   color: #FEF5EF;
   display: flex;
@@ -55,11 +55,17 @@ const CircularFrame = styled.div`
   height: 50vw;
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 52%;
   transform: translate(-50%, -50%);
   background: url(${frame}) no-repeat center/cover;
   border-radius: 50%;
-  z-index: 1; // para garantir que ele fique no topo do vídeo
+  z-index: 1;
+`;
+
+const InnerContainer = styled.div`
+  display: flex;
+  max-width: 1900px;
+  margin: 0 auto;
 `;
 
 const LoginPage: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
@@ -86,7 +92,6 @@ const LoginPage: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
     }
   });
 
-  // Animação para deslizar o container de login para a direita
   const loginAnimationProps = useSpring({
     transform: isLoggedIn ? 'translateX(100%)' : 'translateX(0%)',
     config: {
@@ -97,20 +102,22 @@ const LoginPage: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
 
   return (
     <Container>
-      <VideoContainer style={videoAnimationProps}>
-        <video autoPlay loop muted>
-          <source src={video} type="video/mp4" />
-        </video>
-        <CircularFrame />
-      </VideoContainer>
-      <LoginContainer style={loginAnimationProps}>
-        <LoginForm onSubmit={(email, password) => {
-            console.log(`Trying to login with ${email} and ${password}`);
-            setIsLoggedIn(true); // For demo purposes, setting the state to true here
-            onLogin()
-          }}
-        />
-      </LoginContainer>
+      <InnerContainer>
+        <VideoContainer style={videoAnimationProps}>
+          <video autoPlay loop muted>
+            <source src={video} type="video/mp4" />
+          </video>
+          <CircularFrame />
+        </VideoContainer>
+        <LoginContainer style={loginAnimationProps}>
+          <LoginForm onSubmit={(email, password) => {
+              console.log(`Trying to login with ${email} and ${password}`);
+              setIsLoggedIn(true); // For demo purposes, setting the state to true here
+              onLogin()
+            }}
+          />
+        </LoginContainer>
+      </InnerContainer>
     </Container>
   );
 };

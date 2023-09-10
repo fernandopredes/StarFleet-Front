@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
 import SpaceJump from './components/SpaceJump'
 import LoginPage from './pages/LoginPage'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 function App() {
 
-  const [, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const [showSpaceJump, setShowSpaceJump] = useState(false);
+
+  const isAuth = !!localStorage.getItem('jwt');
+
+  useEffect(() => {
+    if (isAuth) {
+      setIsLogged(true);
+    }
+  }, [isAuth])
 
   const handleLogin = () => {
     setIsLogged(true);
@@ -14,14 +23,25 @@ function App() {
 
     setTimeout(() => {
       setShowSpaceJump(false);
-    }, 8000); // Faz o SpaceJump desaparecer depois de 8 segundos
+    }, 8000);
   };
 
   return (
-    <>
-      <LoginPage onLogin={handleLogin}/>
+    <Router>
+      <Routes>
+        {!isLogged ? (
+            <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
+          ) : (
+            <Navigate to="/news" />
+          )}
+        {/* Outras rotas protegidas podem ser adicionadas aqui.
+          <PrivateRoute path="/news" element={<TenForwardNews />} />
+          <PrivateRoute path="/explorations" element={<HolodeckExplorations />} />
+          <PrivateRoute path="/quiz" element={<StarfleetAcademyExam />} />
+        */}
+      </Routes>
       {showSpaceJump && <SpaceJump />}
-    </>
+    </Router>
   )
 }
 
