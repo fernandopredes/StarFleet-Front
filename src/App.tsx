@@ -1,48 +1,47 @@
 import { useEffect, useState } from 'react';
-import './App.css'
-import SpaceJump from './components/SpaceJump'
-import LoginPage from './pages/LoginPage'
+import './App.css';
+import SpaceJump from './components/SpaceJump';
+import LoginPage from './pages/LoginPage';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
+import TenForwardNews from './pages/TenForwardNews';
+import PrivateRoute from './PrivateRoute';
+
 function App() {
-
-  const [isLogged, setIsLogged] = useState(false);
   const [showSpaceJump, setShowSpaceJump] = useState(false);
-
+  const [redirectToNews, setRedirectToNews] = useState(false);
   const isAuth = !!localStorage.getItem('jwt');
 
-  useEffect(() => {
-    if (isAuth) {
-      setIsLogged(true);
-    }
-  }, [isAuth])
-
   const handleLogin = () => {
-    setIsLogged(true);
     setShowSpaceJump(true);
 
     setTimeout(() => {
       setShowSpaceJump(false);
-    }, 8000);
+      localStorage.setItem('jwt', 'SOME_TOKEN');
+      setRedirectToNews(true);
+    }, 5000);
   };
+
+  useEffect(() => {
+    if (isAuth) {
+      setRedirectToNews(true);
+    }
+  }, [isAuth]);
 
   return (
     <Router>
+      {redirectToNews && <Navigate to="/news" replace />}
       <Routes>
-        {!isLogged ? (
-            <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
-          ) : (
-            <Navigate to="/news" />
-          )}
-        {/* Outras rotas protegidas podem ser adicionadas aqui.
-          <PrivateRoute path="/news" element={<TenForwardNews />} />
-          <PrivateRoute path="/explorations" element={<HolodeckExplorations />} />
-          <PrivateRoute path="/quiz" element={<StarfleetAcademyExam />} />
-        */}
+        <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
+        <Route path="/news" element={
+          <PrivateRoute>
+            <TenForwardNews />
+          </PrivateRoute>
+        } />
       </Routes>
       {showSpaceJump && <SpaceJump />}
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;

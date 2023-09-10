@@ -31,7 +31,7 @@ const VideoContainer = styled(animated.div)`
     max-height: 100vh;
     max-width: 100vh;
     position: absolute;
-    top: 50%;
+    top: 51%;
     left: 50%;
     transform: translate(-50%, -50%);
     object-fit: cover;
