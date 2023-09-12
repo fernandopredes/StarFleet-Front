@@ -16,9 +16,10 @@ interface PlanetProps {
   name: string;
   image: string;
   dimensions: [number, number, number];
+  onClick?: () => void;
 }
 
-const Planet: React.FC<PlanetProps> = ({ name, image, dimensions }) => {
+const Planet: React.FC<PlanetProps> = ({ name, image, dimensions, onClick }) => {
     const mountRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -27,8 +28,11 @@ const Planet: React.FC<PlanetProps> = ({ name, image, dimensions }) => {
       const currentRef = mountRef.current
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-      const renderer = new THREE.WebGLRenderer({ antialias: true })
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(400, 160);
+      const aspectRatio = 400 / 160; 
+      const camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
 
       renderer.setSize(400,160);
       currentRef.appendChild(renderer.domElement)
@@ -65,7 +69,7 @@ const Planet: React.FC<PlanetProps> = ({ name, image, dimensions }) => {
   }, [dimensions, image])
 
     return (
-      <Background>
+      <Background onClick={onClick}>
           <h2>{name}</h2>
           <PlanetContainer ref={mountRef}></PlanetContainer>
       </Background>
