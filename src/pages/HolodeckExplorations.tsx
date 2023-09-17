@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { starTrekAPI } from '../api';
 import { PlanetType } from '../types/planets';
 import stars from '../assets/stars.jpg'
+import { planetMappings } from '../utils/planetsData';
 
 const Wrapper = styled.div`
   color: white;
@@ -14,91 +15,133 @@ const Wrapper = styled.div`
 `;
 
 const Header = styled.h1`
-
-  background: url(${holodeck}) no-repeat center ;
+  background: url(${holodeck}) no-repeat center;
   background-size: cover;
+  background-position: bottom;
   padding-top: 500px;
-  text-align: center;
   width: 100%;
+  position: relative;
+
+  & > span {
+    font-size: 48px;
+    font-weight: 400;
+    position: absolute;
+    bottom: 10vh;
+    left: 5vw;
+    text-align: start;
+  }
+  @media (max-width: 768px) {
+    & > span {
+      bottom: 8vh;
+      left: 3vw;
+    }
+  }
 `;
 
-const PlanetGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
-  padding: 20px;
-  width: 100%;
+const Sidebar = styled.div`
+    width: 250px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 16px;
+    border: 2px solid #B0B0B0;
+    background-color: rgba(176, 176, 176, 0.1);
+    border-radius: 5px;
+    .planet{
+      font-size: 24px;
+      margin: .5rem 0;
+      cursor: pointer;
+      &:hover{
+        color: #ffc164;
+      }
+    }
 `;
 
-const ModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+const PlanetDisplay = styled.div`
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid #B0B0B0;
+    background-color: rgba(176, 176, 176, 0.1);
+    border-radius: 5px;
 `;
 
-const ModalContent = styled.div`
-  background-color: white;
-  padding: 20px;
-  max-width: 80%;
-  max-height: 80%;
-  overflow: auto;
-  border-radius: 8px;
+const Container = styled.div`
+    margin-top: 4rem;
+    display: flex;
+    justify-content: space-between;
+    gap:25px;
+    width: 600px;
 `;
+
+const TextBox = styled.div`
+  font-size: 24px;
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+  max-width: 570px;
+  border: 2px solid #B0B0B0;
+  background-color: rgba(176, 176, 176, 0.1);
+  border-radius: 5px;
+  padding: 16px;
+`
 
 
 function HolodeckExplorations() {
-
   const [astronomicalObjects, setAstronomicalObjects] = useState<PlanetType[]>([]);
   const [selectedPlanet, setSelectedPlanet] = useState<PlanetType | null>(null);
-
-  const handlePlanetClick = (planet: PlanetType) => {
-    setSelectedPlanet(planet);
-  };
 
   useEffect(() => {
     starTrekAPI.get('/v2/rest/astronomicalObject/search?pageNumber=3&pageSize=10')
         .then(response => {
-            setAstronomicalObjects(response.data.astronomicalObjects);
+          const planets = response.data.astronomicalObjects.filter((obj: PlanetType) => obj.astronomicalObjectType === "PLANET");
+            setAstronomicalObjects(planets)
+            if (planets.length > 0) {
+                setSelectedPlanet(planets[0])
+            }
         })
         .catch(error => {
             console.error('Error fetching astronomical objects:', error);
         })
-}, [])
+}, []);
 
-    return (
-      <Wrapper>
-        <Header>Welcome to the Holodeck</Header>
-        <PlanetGrid>
-          {astronomicalObjects
-            .filter(obj => obj.astronomicalObjectType === "PLANET")
-            .map(planet => (
-              <Planet
-                key={planet.uid}
-                name={planet.name}
-                image={stars}
-                dimensions={[1, 32, 32]}
-                onClick={() => handlePlanetClick(planet)}
-              />
-            ))}
-        </PlanetGrid>
-        {selectedPlanet && (
-          <ModalBackground onClick={() => setSelectedPlanet(null)}>
-            <ModalContent onClick={(e) => e.stopPropagation()}>
-              {/* Isso impede que o modal feche quando você clicar nele */}
-              <h2>{selectedPlanet.name}</h2>
-              {/* Aqui você pode adicionar mais informações sobre o planeta */}
-            </ModalContent>
-          </ModalBackground>
-        )}
-      </Wrapper>
-    );
+  return (
+    <Wrapper>
+        <Header>
+          <span>Welcome to the Holodeck</span>
+        </Header>
+        <Container>
+          {astronomicalObjects.length > 0 ? (
+            <>
+              <Sidebar>
+                  {astronomicalObjects
+                      .filter(obj => obj.astronomicalObjectType === "PLANET")
+                      .map(planet => (
+                          <div className='planet' key={planet.uid} onClick={() => setSelectedPlanet(planet)}>
+                              {planet.name}
+                          </div>
+                      ))}
+              </Sidebar>
+              <PlanetDisplay>
+                  {selectedPlanet && (
+                      <Planet
+                          key={selectedPlanet.uid}
+                          name={selectedPlanet.name}
+                          image={planetMappings[selectedPlanet.name]?.image || stars}
+                          dimensions={planetMappings[selectedPlanet.name]?.dimensions || [1.7, 37, 34]}
+                      />
+                  )}
+              </PlanetDisplay>
+            </>
+          ) : (
+            <span>Carregando...</span>
+          )}
+        </Container>
+        <TextBox>
+          <p>{planetMappings[selectedPlanet!.name]?.text || "No data found."}</p>
+        </TextBox>
+    </Wrapper>
+  );
 }
 
 export default HolodeckExplorations;

@@ -3,12 +3,16 @@ import * as THREE from 'three';
 import styled from 'styled-components';
 
 const Background = styled.div`
-
+h2{
+  text-align: center;
+  margin-bottom: 2rem;
+}
 `
 
 const PlanetContainer = styled.div`
-  width: 200px;
-  height: 300px;
+  width: 290px;
+  padding-right: 100px;
+  height: 100%;
   background: transparent;
 `;
 
@@ -31,7 +35,7 @@ const Planet: React.FC<PlanetProps> = ({ name, image, dimensions, onClick }) => 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setClearColor(0x000000, 0);
       renderer.setSize(400, 160);
-      const aspectRatio = 400 / 160; 
+      const aspectRatio = 400 / 160;
       const camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
 
       renderer.setSize(400,160);

@@ -33,8 +33,8 @@ export const Input = styled.input`
   padding: 0.5rem;
   border: 2px solid #B0B0B0;
   background-color: rgba(176, 176, 176, 0.1);
-  color: #E0E0E0;
   border-radius: 5px;
+  color: #E0E0E0;
   transition: all 0.3s;
 
   &:focus {
@@ -47,8 +47,8 @@ export const Button = styled.button`
   padding: 0.5rem 1rem;
   border: 2px solid #C0C0C0;
   background-color: transparent;
-  color: #E0E0E0;
   border-radius: 5px;
+  color: #E0E0E0;
   transition: all 0.3s;
   cursor: pointer;
 
