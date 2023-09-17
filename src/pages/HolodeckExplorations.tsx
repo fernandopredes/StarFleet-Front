@@ -138,7 +138,10 @@ function HolodeckExplorations() {
           )}
         </Container>
         <TextBox>
-          <p>{planetMappings[selectedPlanet!.name]?.text || "No data found."}</p>
+          {selectedPlanet ? (
+            <p>{planetMappings[selectedPlanet.name]?.text || "No data found."}</p>
+          ):
+          (null)}
         </TextBox>
     </Wrapper>
   );
