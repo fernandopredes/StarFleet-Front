@@ -8,18 +8,20 @@ import logo from './assets/logo.png'
 import TenForwardNews from './pages/TenForwardNews';
 import HolodeckExplorations from './pages/HolodeckExplorations';
 import Menu from './components/Menu';
-
+interface LoginFormProps {
+  onSubmit: (email: string, password: string) => void;
+}
 function App() {
   const [showSpaceJump, setShowSpaceJump] = useState(false);
-  const isAuth = !!localStorage.getItem('jwt');
+  const isAuth = !!localStorage.getItem('access_token');
 
-  const handleLogin = () => {
+  const handleLogin = (token: string) => {
     setShowSpaceJump(true);
     setTimeout(() => {
-      setShowSpaceJump(false);
-      localStorage.setItem('jwt', 'SOME_TOKEN');
+        setShowSpaceJump(false);
+        localStorage.setItem('access_token', token);
     }, 5000);
-  };
+};
 
   return (
     <Router>

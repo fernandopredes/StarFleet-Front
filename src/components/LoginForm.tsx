@@ -70,7 +70,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
   return (
     <FormContainer style={{ opacity: isRegistering ? 0.7 : 1 }}>
       {isRegistering
-        ? <Register onToggle={handleToggle} onSubmit={(email, password, username) => {/* handle registration logic */}} />
+        ? <Register onToggle={handleToggle} />
         : <Login onToggle={handleToggle} onSubmit={onSubmit} />
       }
     </FormContainer>

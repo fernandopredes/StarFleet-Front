@@ -39,7 +39,7 @@ const Menu: React.FC<{ logoSrc: string }> = ({ logoSrc }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('access_token');
     window.location.href = "/";
   };
 

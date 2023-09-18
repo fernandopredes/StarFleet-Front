@@ -5,6 +5,7 @@ import LoginForm from '../components/LoginForm';
 import { useSpring, animated } from 'react-spring';
 import bg from '../assets/full.jpg'
 import frame from '../assets/frame.png'
+import { loginUser } from '../api';
 
 const Container = styled.div`
   background-image: url(${bg});
@@ -67,8 +68,10 @@ const InnerContainer = styled.div`
   max-width: 1900px;
   margin: 0 auto;
 `;
-
-const LoginPage: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
+interface LoginPageProps {
+  onLogin: (token: string) => void;
+}
+const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [, setShowSpaceJump] = useState(false)
 
@@ -110,10 +113,18 @@ const LoginPage: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
           <CircularFrame />
         </VideoContainer>
         <LoginContainer style={loginAnimationProps}>
-          <LoginForm onSubmit={(email, password) => {
-              console.log(`Trying to login with ${email} and ${password}`);
-              setIsLoggedIn(true); // For demo purposes, setting the state to true here
-              onLogin()
+        <LoginForm onSubmit={async (email, password) => {
+            try {
+                    const response = await loginUser(email, password);
+                    if (response && response.access_token) {
+                        setIsLoggedIn(true);
+                        onLogin(response.access_token);
+                    } else {
+                        console.error("Erro durante o login.");
+                    }
+                } catch (error) {
+                    console.error("Erro de login:", error);
+                }
             }}
           />
         </LoginContainer>
