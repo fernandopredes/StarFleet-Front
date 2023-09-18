@@ -8,9 +8,8 @@ import logo from './assets/logo.png'
 import TenForwardNews from './pages/TenForwardNews';
 import HolodeckExplorations from './pages/HolodeckExplorations';
 import Menu from './components/Menu';
-interface LoginFormProps {
-  onSubmit: (email: string, password: string) => void;
-}
+import Challenge from './pages/Challenge';
+
 function App() {
   const [showSpaceJump, setShowSpaceJump] = useState(false);
   const isAuth = !!localStorage.getItem('access_token');
@@ -30,7 +29,7 @@ function App() {
         <Routes>
           <Route path="/explorations" element={<HolodeckExplorations />} />
           <Route path="/news" element={<TenForwardNews />} />
-          {/* Pode adicionar mais rotas protegidas aqui */}
+          <Route path="/quiz" element={<Challenge />} />
           <Route path="*" element={<Navigate to="/news" replace />} />
         </Routes>
       ) : (

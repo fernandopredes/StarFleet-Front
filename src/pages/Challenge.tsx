@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import guinan from '../assets/guinan.jpg'
+import data from '../assets/data.jpg'
 
 const Wrapper = styled.div`
   color: white;
@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 `;
 
 const Header = styled.h1`
-  background: url(${guinan}) no-repeat center;
+  background: url(${data}) no-repeat center;
   background-size: cover;
   background-position: bottom;
   padding-top: 500px;
@@ -32,14 +32,14 @@ const Header = styled.h1`
   }
 `;
 
-const TenForwardNews = () => {
+const Challenge = () => {
   return (
     <Wrapper>
         <Header>
-          <span>Guinan's Ten Foward</span>
+          <span>Fleet Examination</span>
         </Header>
     </Wrapper>
   )
 }
 
-export default TenForwardNews
+export default Challenge

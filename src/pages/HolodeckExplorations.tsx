@@ -108,7 +108,7 @@ function HolodeckExplorations() {
   return (
     <Wrapper>
         <Header>
-          <span>Welcome to the Holodeck</span>
+          <span>Enterprise Holodeck D</span>
         </Header>
         <Container>
           {astronomicalObjects.length > 0 ? (

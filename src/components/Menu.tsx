@@ -47,9 +47,9 @@ const Menu: React.FC<{ logoSrc: string }> = ({ logoSrc }) => {
     <MenuContainer>
       <Logo src={logoSrc} alt="Logo" onClick={() => navigate('/news')} />
       <Navigation>
-        <NavItem to="/news">Ten Forward News</NavItem>
-        <NavItem to="/explorations">Holodeck Explorations</NavItem>
-        <NavItem to="/quiz">Quiz Name</NavItem>
+        <NavItem to="/news">Guinan's Ten Foward</NavItem>
+        <NavItem to="/explorations">Enterprise Holodeck</NavItem>
+        <NavItem to="/quiz">Fleet Examination</NavItem>
         <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
       </Navigation>
     </MenuContainer>
