@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import guinan from '../assets/guinan.jpg'
 import { useEffect, useState } from "react";
-import { createPost, deletePost, editPost, fetchPosts } from "../api";
+import { createPost, deletePost, editPost, fetchPosts, userData } from "../api";
 import { Post } from "../types/posts";
+import { User } from "../types/users";
 
 const Wrapper = styled.div`
   color: white;
@@ -59,14 +60,37 @@ const TenForwardNews = () => {
   const [editingContent, setEditingContent] = useState<string>('');
   const [editingTitle, setEditingTitle] = useState<string>('');
   const [editingAbstract, setEditingAbstract] = useState<string>('');
+  const [, setLoggedUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
 
   const postOwner = localStorage.getItem('user_id')
+  const token = localStorage.getItem('access_token')
+
+  useEffect(() => {
+    async function fetchAllUsers() {
+      if (token) {
+        const allUsers = await userData(token)
+        setUsers(allUsers)
+      }
+    }
+    fetchAllUsers()
+  }, [token])
+
+  useEffect(() => {
+    async function fetchUserData() {
+      if (token) {
+        const user = await userData(token)
+        setLoggedUser(user);
+      }
+    }
+    fetchUserData();
+  }, [token]);
+
 
   useEffect(() => {
     async function loadPosts() {
       const data = await fetchPosts()
       setPosts(data)
-      console.log(data)
     }
     loadPosts();
     setReloadPosts(false);
@@ -119,21 +143,34 @@ const TenForwardNews = () => {
         <button type="submit">Criar Post</button>
       </CreatePostForm>
       <PostList>
-      {posts.map(post => (
-        post && (
-          <div key={post.id}>
-            <div>{post.text}</div>
-            {postOwner && parseInt(postOwner, 10) === post.user_id ?(
-              <>
-                <button onClick={() => setEditingPostId(post.id)}>Editar</button>
-                <button onClick={() => handleDeletePost(post.id)}>Deletar</button>
-              </>
+        {posts.map(post => {
+          if (!post) return null
+          const postUser = users.find(user => user.id === post.user_id)
+          return (
+            post && (
+              <div key={post.id}>
+                <div>{post.title}</div>
+                <div>{post.abstract}</div>
+                <div>{post.text}</div>
+
+                {postUser && (
+                  <>
+                    <img src={postUser.profile_pic} alt={`${postUser.name}'s profile`} />
+                    <div>{postUser.name}</div>
+                    <div>{postUser.email}</div>
+                  </>
+                )}
+
+                {postOwner && parseInt(postOwner, 10) === post.user_id ? (
+                  <>
+                    <button onClick={() => setEditingPostId(post.id)}>Editar</button>
+                    <button onClick={() => handleDeletePost(post.id)}>Deletar</button>
+                  </>
+                ) : null}
+              </div>
             )
-             :
-              null}
-          </div>
-        )
-      ))}
+          );
+        })}
       </PostList>
       {editingPostId && (
           <EditModal>

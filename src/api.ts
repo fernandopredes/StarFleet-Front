@@ -60,6 +60,24 @@ export async function loginUser(email: string, password: string) {
   return response.data;
 }
 
+export async function userData(token:string) {
+  const response = await backAPI.get(`/users`, {
+    headers: {
+        'Authorization': `Bearer ${token}`
+    }
+  })
+  return response.data;
+}
+
+export async function oneUser(userId:string, token:string) {
+  const response = await backAPI.get(`/user/${userId}`, {
+    headers: {
+        'Authorization': `Bearer ${token}`
+    }
+  })
+  return response.data;
+}
+
 export async function fetchPosts(): Promise<Post[]> {
   const token = localStorage.getItem('access_token')
   if (!token) {
@@ -103,7 +121,6 @@ export async function createPost(
           'Authorization': `Bearer ${token}`
       }
   })
-
   if (response.status !== 200) {
       throw new Error('Failed to create post.')
   }
