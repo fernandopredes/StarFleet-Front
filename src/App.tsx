@@ -14,11 +14,12 @@ function App() {
   const [showSpaceJump, setShowSpaceJump] = useState(false);
   const isAuth = !!localStorage.getItem('access_token');
 
-  const handleLogin = (token: string) => {
+  const handleLogin = (token: string, userId: string) => {
     setShowSpaceJump(true);
     setTimeout(() => {
         setShowSpaceJump(false);
-        localStorage.setItem('access_token', token);
+        localStorage.setItem('access_token', token)
+        localStorage.setItem('user_id', userId)
     }, 5000);
 };
 
@@ -34,7 +35,7 @@ function App() {
         </Routes>
       ) : (
         <Routes>
-          <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/" element={<LoginPage onLogin={(token, userId) => handleLogin(token, userId)} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       )}

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-
-
-
+import { CreatePostResponse, Post } from './types/posts';
 
 export const starTrekAPI = axios.create({
   baseURL: 'https://stapi.co/api',
@@ -28,22 +26,22 @@ export async function registerUser(email: string, password: string, username: st
 }
 
 export async function uploadUserPic(file: string | Blob) {
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('access_token')
   if (!token) {
-      throw new Error('No token found in localStorage.');
+      throw new Error('No token found in localStorage.')
   }
 
-  const formData = new FormData();
-  formData.append('file', file);
+  const formData = new FormData()
+  formData.append('file', file)
 
   const response = await backAPI.post('/upload_pic', formData, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': undefined
     }
-  });
+  })
   if (response.status !== 200) {
-    throw new Error('Failed to upload profile picture.');
+    throw new Error('Failed to upload profile picture.')
   }
 
   return response.data;
@@ -56,7 +54,96 @@ export async function loginUser(email: string, password: string) {
   });
 
   if (response.status !== 200) {
-    throw new Error('Failed to login.');
+    throw new Error('Failed to login.')
+  }
+
+  return response.data;
+}
+
+export async function fetchPosts(): Promise<Post[]> {
+  const token = localStorage.getItem('access_token')
+  if (!token) {
+      throw new Error('No token found in localStorage.')
+  }
+
+  const response = await backAPI.get('/posts', {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  });
+
+  if (response.status !== 200) {
+      throw new Error('Failed to fetch posts.')
+  }
+
+  return response.data;
+}
+
+export async function createPost(
+  title: string,
+  abstract: string,
+  text: string,
+  userId?: number
+): Promise<CreatePostResponse> {
+  const token = localStorage.getItem('access_token')
+  if (!token) {
+      throw new Error('No token found in localStorage.')
+  }
+  if (!userId) {
+      userId = parseInt(localStorage.getItem('user_id') || '0')
+  }
+
+  const response = await backAPI.post('/create_post', {
+      title,
+      abstract,
+      text,
+      user_id: userId
+  }, {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  })
+
+  if (response.status !== 200) {
+      throw new Error('Failed to create post.')
+  }
+
+  return response.data;
+}
+
+export async function editPost(postId: number, updatedData: any) {
+  const token = localStorage.getItem('access_token')
+  if (!token) {
+      throw new Error('No token found in localStorage.')
+  }
+
+  const response = await backAPI.put(`/posts/${postId}`, updatedData, {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  });
+
+  if (response.status !== 200) {
+      throw new Error('Failed to edit post.')
+  }
+
+  return response.data;
+}
+
+export async function deletePost(postId: number) {
+  const token = localStorage.getItem('access_token')
+  if (!token) {
+      throw new Error('No token found in localStorage.')
+  }
+
+  const response = await backAPI.delete(`/posts/${postId}`, {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  });
+
+  if (response.status !== 200) {
+      throw new Error('Failed to delete post.')
   }
 
   return response.data;

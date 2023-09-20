@@ -69,7 +69,7 @@ const InnerContainer = styled.div`
   margin: 0 auto;
 `;
 interface LoginPageProps {
-  onLogin: (token: string) => void;
+  onLogin: (token: string, userId: string) => void;
 }
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -115,18 +115,18 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         <LoginContainer style={loginAnimationProps}>
         <LoginForm onSubmit={async (email, password) => {
             try {
-                    const response = await loginUser(email, password);
-                    if (response && response.access_token) {
-                        setIsLoggedIn(true);
-                        onLogin(response.access_token);
-                    } else {
-                        console.error("Erro durante o login.");
-                    }
-                } catch (error) {
-                    console.error("Erro de login:", error);
+                const response = await loginUser(email, password);
+                if (response && response.access_token && response.user_id) {
+                    setIsLoggedIn(true);
+                    onLogin(response.access_token, response.user_id);
+                } else {
+                    console.error("Erro durante o login.");
                 }
-            }}
-          />
+            } catch (error) {
+                console.error("Erro de login:", error);
+            }
+        }}
+        />
         </LoginContainer>
       </InnerContainer>
     </Container>
