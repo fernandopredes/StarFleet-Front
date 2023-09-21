@@ -35,18 +35,107 @@ const Header = styled.h1`
     }
   }
 `;
-const PostList = styled.div`
-  // estilos para a lista de posts...
+
+const PostWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: rgba(176, 176, 176, 0.1);
+  border: 2px solid #B0B0B0;
+  border-radius: 5px;
+  width: 100%;
+  width: 1000px;
+`
+
+const PostImage = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px;
+`
+
+const PostDetails = styled.div`
+  flex: 1;
+`
+
+const StyledButton = styled.button`
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(234, 234, 234, 0.1);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(236, 236, 236, 1);
+    color: #171717;
+  }
+
+  & + & {
+    margin-top: 1rem;
+    margin-left: 1rem;
+  }
 `;
 
+const FormWrapper = styled.div`
+  background-color: rgba(176, 176, 176, 0.1);
+  border: 2px solid #B0B0B0;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
 
+const StyledInput = styled.input`
+  padding: 10px;
+  margin: 10px 0;
+  width: 90%;
+`
+
+const StyledTextarea = styled.textarea`
+  padding: 10px;
+  margin: 10px 0;
+  width: 500px;
+  resize: none;
+`
+const PostList = styled.div`
+
+`
 
 const CreatePostForm = styled.form`
-  // estilos para o formulário de criação de post...
+`
+
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 `;
 
-const EditModal = styled.div`
-  // estilos para o modal de edição (opcional)...
+const ModalContent = styled.div`
+  width: 100%;
+  max-width: 600px;
+  background-color: #222;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1001;
 `;
 
 
@@ -80,11 +169,11 @@ const TenForwardNews = () => {
     async function fetchUserData() {
       if (token) {
         const user = await userData(token)
-        setLoggedUser(user);
+        setLoggedUser(user)
       }
     }
-    fetchUserData();
-  }, [token]);
+    fetchUserData()
+  }, [token])
 
 
   useEffect(() => {
@@ -93,8 +182,20 @@ const TenForwardNews = () => {
       setPosts(data)
     }
     loadPosts();
-    setReloadPosts(false);
-  }, [reloadPosts]);
+    setReloadPosts(false)
+  }, [reloadPosts])
+
+  useEffect(() => {
+    if (editingPostId) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'
+    };
+  }, [editingPostId])
 
   const handleSubmitPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -137,10 +238,12 @@ const TenForwardNews = () => {
         <span>Guinan's Ten Foward</span>
       </Header>
       <CreatePostForm onSubmit={handleSubmitPost}>
-        <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Título do Post" />
-        <input value={abstract} onChange={e => setAbstract(e.target.value)} placeholder="Resumo do Post" />
-        <textarea value={postContent} onChange={e => setPostContent(e.target.value)}></textarea>
-        <button type="submit">Criar Post</button>
+      <FormWrapper>
+        <StyledInput value={title} onChange={e => setTitle(e.target.value)} placeholder="Título do Post" />
+        <StyledInput value={abstract} onChange={e => setAbstract(e.target.value)} placeholder="Resumo do Post" />
+        <StyledTextarea value={postContent} onChange={e => setPostContent(e.target.value)}></StyledTextarea>
+        <StyledButton type="submit">Criar Post</StyledButton>
+      </FormWrapper>
       </CreatePostForm>
       <PostList>
         {posts.map(post => {
@@ -148,49 +251,53 @@ const TenForwardNews = () => {
           const postUser = users.find(user => user.id === post.user_id)
           return (
             post && (
-              <div key={post.id}>
-                <div>{post.title}</div>
-                <div>{post.abstract}</div>
-                <div>{post.text}</div>
-
-                {postUser && (
-                  <>
-                    <img src={postUser.profile_pic} alt={`${postUser.name}'s profile`} />
-                    <div>{postUser.name}</div>
-                    <div>{postUser.email}</div>
-                  </>
-                )}
-
-                {postOwner && parseInt(postOwner, 10) === post.user_id ? (
-                  <>
-                    <button onClick={() => setEditingPostId(post.id)}>Editar</button>
-                    <button onClick={() => handleDeletePost(post.id)}>Deletar</button>
-                  </>
-                ) : null}
-              </div>
+              <PostWrapper key={post.id}>
+                {postUser && <PostImage src={postUser.profile_pic} alt={`${postUser.name}'s profile`} />}
+                <PostDetails>
+                  {postUser && (
+                    <>
+                      <div>{postUser.name}</div>
+                      <div>{postUser.email}</div>
+                    </>
+                  )}
+                  <div>{post.title}</div>
+                  <div>{post.abstract}</div>
+                  <div>{post.text}</div>
+                  {postOwner && parseInt(postOwner, 10) === post.user_id ? (
+                    <>
+                      <StyledButton onClick={() => setEditingPostId(post.id)}>Editar</StyledButton>
+                      <StyledButton onClick={() => handleDeletePost(post.id)}>Deletar</StyledButton>
+                    </>
+                  ) : null}
+                </PostDetails>
+              </PostWrapper>
             )
           );
         })}
       </PostList>
-      {editingPostId && (
-          <EditModal>
-            <input
-              value={editingTitle}
-              onChange={e => setEditingTitle(e.target.value)}
-              placeholder="Título do Post"
-            />
-            <input
-              value={editingAbstract}
-              onChange={e => setEditingAbstract(e.target.value)}
-              placeholder="Resumo do Post"
-            />
-            <textarea
-              value={editingContent}
-              onChange={e => setEditingContent(e.target.value)}
-            ></textarea>
-            <button onClick={() => handleEditPost(editingPostId, editingTitle, editingAbstract, editingContent)}>Salvar</button>
-            <button onClick={() => setEditingPostId(null)}>Cancelar</button>
-          </EditModal>
+        {editingPostId && (
+          <ModalOverlay onClick={() => setEditingPostId(null)}>
+            <ModalContent onClick={e => e.stopPropagation()}>
+              <StyledInput
+                value={editingTitle}
+                onChange={e => setEditingTitle(e.target.value)}
+                placeholder="Título do Post"
+              />
+              <StyledInput
+                value={editingAbstract}
+                onChange={e => setEditingAbstract(e.target.value)}
+                placeholder="Resumo do Post"
+              />
+              <StyledTextarea
+                value={editingContent}
+                onChange={e => setEditingContent(e.target.value)}
+              ></StyledTextarea>
+              <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                <StyledButton onClick={() => handleEditPost(editingPostId, editingTitle, editingAbstract, editingContent)}>Salvar</StyledButton>
+                <StyledButton onClick={() => setEditingPostId(null)}>Cancelar</StyledButton>
+              </div>
+            </ModalContent>
+          </ModalOverlay>
         )}
     </Wrapper>
   );
