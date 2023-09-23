@@ -281,20 +281,20 @@ const TenForwardNews = () => {
               <StyledInput
                 value={editingTitle}
                 onChange={e => setEditingTitle(e.target.value)}
-                placeholder="Título do Post"
+                placeholder="Title"
               />
               <StyledInput
                 value={editingAbstract}
                 onChange={e => setEditingAbstract(e.target.value)}
-                placeholder="Resumo do Post"
+                placeholder="Subject"
               />
               <StyledTextarea
                 value={editingContent}
                 onChange={e => setEditingContent(e.target.value)}
               ></StyledTextarea>
               <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                <StyledButton onClick={() => handleEditPost(editingPostId, editingTitle, editingAbstract, editingContent)}>Salvar</StyledButton>
-                <StyledButton onClick={() => setEditingPostId(null)}>Cancelar</StyledButton>
+                <StyledButton onClick={() => handleEditPost(editingPostId, editingTitle, editingAbstract, editingContent)}>Save</StyledButton>
+                <StyledButton onClick={() => setEditingPostId(null)}>Cancel</StyledButton>
               </div>
             </ModalContent>
           </ModalOverlay>
