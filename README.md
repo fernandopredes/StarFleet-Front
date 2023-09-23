@@ -1,27 +1,27 @@
-# React + TypeScript + Vite
+# Star Fleet - Frontend 🌌🖖
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é um frontend construído com React e TypeScript para os fãs de Star Trek. Ele oferece uma interface intuitiva para visualizar posts, informações sobre planetas (usando a [STAPI - Star Trek API](https://stapi.co/api)), e quizzes. Este projeto foi desenvolvido como parte do MVP 3 da pós-graduação da PUC-Rio.
 
-Currently, two official plugins are available:
+## 🚀 Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Visualização de Posts**: Os usuários podem escrever/editar/deletar posts relacionados ao universo de Star Trek.
+- **Detalhes dos Planetas**: Através da integração com a STAPI, é possível obter informações detalhadas sobre diversos planetas do universo de Star Trek e uma vizualização em 3D do mesmo.
+- **Quizzes**: Desafie seus conhecimentos sobre Star Trek respondendo quizzes.
 
-## Expanding the ESLint configuration
+## 🧰 Tecnologias Utilizadas
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [STAPI - Star Trek API](https://stapi.co/api)
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+## 🐳 Executando o Projeto com Docker
+
+```bash
+# Construir a imagem
+docker build -t nome-da-imagem .
+
+# Rodar o contêiner
+docker run -p 3000:3000 nome-da-imagem
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
