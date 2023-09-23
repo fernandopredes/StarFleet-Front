@@ -239,10 +239,10 @@ const TenForwardNews = () => {
       </Header>
       <CreatePostForm onSubmit={handleSubmitPost}>
       <FormWrapper>
-        <StyledInput value={title} onChange={e => setTitle(e.target.value)} placeholder="Título do Post" />
-        <StyledInput value={abstract} onChange={e => setAbstract(e.target.value)} placeholder="Resumo do Post" />
-        <StyledTextarea value={postContent} onChange={e => setPostContent(e.target.value)}></StyledTextarea>
-        <StyledButton type="submit">Criar Post</StyledButton>
+        <StyledInput value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" />
+        <StyledInput value={abstract} onChange={e => setAbstract(e.target.value)} placeholder="Subject" />
+        <StyledTextarea value={postContent} onChange={e => setPostContent(e.target.value)}placeholder="Your text here"></StyledTextarea>
+        <StyledButton type="submit">Create</StyledButton>
       </FormWrapper>
       </CreatePostForm>
       <PostList>
@@ -265,8 +265,8 @@ const TenForwardNews = () => {
                   <div>{post.text}</div>
                   {postOwner && parseInt(postOwner, 10) === post.user_id ? (
                     <>
-                      <StyledButton onClick={() => setEditingPostId(post.id)}>Editar</StyledButton>
-                      <StyledButton onClick={() => handleDeletePost(post.id)}>Deletar</StyledButton>
+                      <StyledButton onClick={() => setEditingPostId(post.id)}>Edit</StyledButton>
+                      <StyledButton onClick={() => handleDeletePost(post.id)}>Delete</StyledButton>
                     </>
                   ) : null}
                 </PostDetails>

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { CreatePostResponse, Post } from './types/posts';
+import { Quiz } from './types/quiz';
+
+//chamada base da api externa de star trek
 
 export const starTrekAPI = axios.create({
   baseURL: 'https://stapi.co/api',
@@ -9,12 +12,16 @@ export const starTrekAPI = axios.create({
   }
 });
 
+//chamada base da api back-end
+
 export const backAPI = axios.create({
   baseURL: 'http://127.0.0.1:5000',
   headers: {
     'Content-Type': 'application/json'
   }
 });
+
+//chamadas de user
 
 export async function registerUser(email: string, password: string, username: string) {
   const response = await backAPI.post('/register', {
@@ -77,6 +84,8 @@ export async function oneUser(userId:string, token:string) {
   })
   return response.data;
 }
+
+//chamadas de posts
 
 export async function fetchPosts(): Promise<Post[]> {
   const token = localStorage.getItem('access_token')
@@ -164,4 +173,40 @@ export async function deletePost(postId: number) {
   }
 
   return response.data;
+}
+
+//chamadas de quiz
+
+export async function fetchAllQuizzes():  Promise<Quiz[]> {
+  const token = localStorage.getItem('access_token')
+  if (!token) {
+      throw new Error('No token found in localStorage.')
+  }
+  const response = await backAPI.get('/quizzes', {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  })
+  if (response.status !== 200) {
+      throw new Error('Failed to fetch quizzes.')
+  }
+  return response.data;
+}
+
+
+export async function fetchQuizById(quizId: number): Promise<any> {
+  const token = localStorage.getItem('access_token')
+  if (!token) {
+      throw new Error('No token found in localStorage.')
+  }
+
+  const response = await backAPI.get(`/quizzes/${quizId}`, {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  })
+  if (response.status !== 200) {
+      throw new Error('Failed to fetch quiz.')
+  }
+  return response.data
 }
