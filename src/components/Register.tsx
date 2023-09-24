@@ -38,7 +38,8 @@ const Register = ({ onToggle }: RegisterProps) => {
         setSuccessMessage('Registration, login and profile picture upload successful!');
 
         setTimeout(() => {
-          window.location.reload();
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('user_id');
         }, 3000);
         setErrorMessage(null);
       } else {
