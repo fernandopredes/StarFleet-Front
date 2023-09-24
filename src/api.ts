@@ -15,9 +15,10 @@ export const starTrekAPI = axios.create({
 //chamada base da api back-end
 
 export const backAPI = axios.create({
-  baseURL: 'http://127.0.0.1:5000',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
   }
 });
 

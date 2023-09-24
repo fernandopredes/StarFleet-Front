@@ -27,3 +27,6 @@ dist-ssr
 *.tsbuildinfo
 *.tmp
 *.temp
+
+# Environment variables
+.env

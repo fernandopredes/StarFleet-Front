@@ -25,3 +25,26 @@ docker build -t nome-da-imagem .
 # Rodar o contêiner
 docker run -p 3000:3000 nome-da-imagem
 ```
+## Configuração das Variáveis de Ambiente
+
+1. Copie o arquivo `.env.example` para um novo arquivo chamado `.env`.
+2. Preencha as variáveis de ambiente no arquivo `.env` conforme necessário. Por exemplo, defina a URL base da API do backend.
+
+```env
+VITE_API_URL=YOUR_BACKEND_API_URL_HERE
+```
+
+## Desenvolvimento Local
+
+Se você deseja executar o projeto localmente sem Docker:
+
+```bash
+
+# Instale as dependências
+npm install
+
+# Execute o projeto
+npm run serve
+```
+
+A aplicação irá se conectar ao backend.
