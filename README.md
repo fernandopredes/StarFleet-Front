@@ -44,7 +44,7 @@ Se você deseja executar o projeto localmente sem Docker:
 npm install
 
 # Execute o projeto
-npm run serve
+npm run dev
 ```
 
 A aplicação irá se conectar ao backend.
