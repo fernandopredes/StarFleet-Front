@@ -33,6 +33,33 @@ docker run -p 3000:3000 nome-da-imagem
 ```env
 VITE_API_URL=YOUR_BACKEND_API_URL_HERE
 ```
+## Caso esteja rodando no WSL2
+
+Se você estiver usando o WSL2, pode ser necessário utilizar o IP interno do contêiner Docker para que o front-end se conecte ao back-end. Siga os passos abaixo:
+
+Construa e rode seu contêiner do back-end.
+
+Identifique o nome ou ID do contêiner do back-end usando:
+
+```bash
+docker ps
+```
+
+Descubra o IP interno do contêiner do back-end:
+
+```bash
+docker inspect <CONTAINER_NAME_OR_ID> | jq -r '.[0].NetworkSettings.IPAddress'
+```
+Substitua <CONTAINER_NAME_OR_ID> pelo nome ou ID do contêiner obtido.
+
+Use o IP obtido para configurar a variável de ambiente no seu arquivo .env para o front-end:
+
+```env
+VITE_API_URL=http://<CONTAINER_IP>:5000
+```
+Substitua <CONTAINER_IP> pelo IP obtido no passo 3.
+
+Agora siga os passos normais para construir e rodar o contêiner do front-end.
 
 ## Desenvolvimento Local
 
